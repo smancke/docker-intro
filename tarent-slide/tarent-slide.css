@@ -1,0 +1,130 @@
+
+body {
+    background: black;
+    overflow-y: hidden;
+    overflow-x: hidden; 
+}
+
+slides {
+    position:absolute; 
+    top:0; bottom:0; left:0; right:0;
+    margin:auto; 
+
+    background: white;
+    width: 1024px;
+    height: 768px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 26px;  
+}
+
+.languages {
+    position: absolute;
+    bottom:0px;
+    right: 10px;
+
+    font-size: 20px;  
+}
+
+.languages a {
+    color: grey;
+}
+
+
+slide {
+    display: none;
+}
+
+.active-slide {
+    display: block;
+}
+
+*,h1,h2,h3,h4,h5,h6 {
+    font-family: Verdana, Arial;
+}
+
+h1 {
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: 0px;
+    margin-bottom: 40px;
+    position: relative;
+    top:0; right:0; left:0;
+    color: white;
+    font-weight: 600;
+    font-size: 45px;
+    background-image: url(./header_combined.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 86px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 36px;
+    line-height: 36px;
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 2;
+    font-weight: inherit;
+    margin-bottom: 12px;
+}
+
+.small {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: inherit;
+    margin-bottom: 8px;
+}
+
+
+@font-face {
+    font-family: "SourceCodePro";
+    src: url("./SourceCodePro-Light.otf.woff") format('woff');
+}
+pre {
+    font-size: 18px;
+    font-family:SourceCodePro, Droid Sans Mono, monospace;
+}
+pre > span {
+    font-size: 18px;
+    font-family:SourceCodePro, Droid Sans Mono, monospace;
+}
+
+ul {
+    margin-left: 1.2em;
+    margin-bottom: 1em;
+    position: relative;
+}
+
+ul li {
+    margin-bottom: 0.5em;
+}
+
+ul li ul {
+    margin-left: 2em;
+    margin-bottom: 0;
+}
+
+ul li ul li:before {
+    content: '-';
+    font-weight: 600;
+}
+
+ul > li:before {
+    content: '\00B7';
+    margin-left: -1em;
+    position: absolute;
+    font-weight: 600;
+}
+
+ul ul {
+    margin-top: .5em;
+}

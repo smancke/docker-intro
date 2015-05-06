@@ -1,0 +1,193 @@
+<!doctype html>
+<!-- 
+Author: Sebastian Mancke
+License: CreativeCommons Attribution-ShareAlike, http://creativecommons.org/licenses/by-sa/3.0/
+--><html ng-app="presentation">
+  <head>
+    <title>AngularJS Einführung</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=800" />
+    <link href="./lib/bootstrap.css" rel="stylesheet" media="screen"/>
+    <script src="./lib/jquery.min.js"></script>
+    <script src="./lib/bootstrap.min.js"></script>
+    <script src="./lib/angular.min.js"></script>
+
+    <link href="./lib/prettify/prettify.css" rel="stylesheet" media="screen"/>
+    <script src="./lib/prettify/prettify.js"></script>
+
+    <script src="./tarent-slide/tarent-slide.js"></script>
+    <link href="./tarent-slide/tarent-slide.css" rel="stylesheet"/>
+
+
+<!--live reload
+    <script src="./lib/live.js"></script> 
+--> 
+  </head>
+  <body onload="prettyPrint()">    
+    <slides>
+      <slide>
+        <img style="float: right; margin-top: 400px; width: 700px;" src="res/docker.png">
+        <div style="clear: both; margin-right: 20px;">
+          <p>
+            <h2 style="text-align: right">Sebastian Mancke</h2>
+            <h6 style="text-align: right">Creative Commons BY-SA 3.0</h6>
+          </p>
+        </div>
+      </slide>
+
+      <slide>        
+        <h1>What is Docker</h1>
+        Docker is a platform for managing linux based containers.
+        <h2>Key concepts</h2>
+        <ul>
+          <li>Defined environment for launching processes</li>
+          <li>Clean separation of environments</li>
+          <li>Sandbox with defined resources</li>
+          <li>One simple interface for launching applications</li>
+        </ul>
+        <h2>What is Docker not!</h2>
+        <ul>
+          <li>Not a virtualisation</li>
+          <li>No seperate kernel</li>
+          <li>No hypervisor</li>
+        </ul>        
+      </slide>
+
+      <slide>        
+        <h1>Installation</h1>
+        Docker ist linux based, but there exist convienent systems for Windows and Mac OS X also.
+        
+        <h3>Detailed Instructions: <a href="https://docs.docker.com/installation/">https://docs.docker.com/installation/</a></h3>
+
+        The simple way for installation in Ubuntu and Debian:
+        <pp>curl https://get.docker.com/ | sh</pp>
+      </slide>
+
+      <slide>
+        <h1>The docker hello world</h1>
+
+        <pp>docker run busybox echo 'Hello World'</pp>
+        What has happened?
+        <ul>
+          <li>Downloads the image busybox</li>
+          <li>Create a new container</li>
+          <li>Executes the echo command within the new container</li>
+        </ul>        
+      </slide>
+
+      <slide>        
+        <h1>Images and containers</h1>
+        <h2>Docker Image</h2>
+        <ul>
+          <li>A template for containers</li>
+          <li>Can be pulled and pushed towards a registry</li>
+          <li>Image names have the form <b>namespace/image:tag</b></li>
+        </ul>
+        <h2>Docker container</h2>
+        <ul>
+          <li>An instance of an image</li>
+          <li>Maintains changed within the filesystems</li>
+          <li>Can be started, stopped, restarted, ..</li>
+        </ul>        
+      </slide>
+      
+      <slide>
+        <h1>Commands for image handling</h1>
+
+        searching in the registry:
+        <pp>docker search &lt;term&gt;</pp>
+
+        listing of downloaded images:
+        <pp>docker images</pp>
+
+        download or update an image from the registry:
+        <pp>docker pull &lt;image&gt;</pp>
+
+        upload an image to the registry:
+        <pp>docker push &lt;image&gt;</pp>
+
+        delete an image locally:
+        <pp>docker rmi &lt;image&gt;</pp>
+
+        give an image a new name (alias):
+        <pp>docker tag &lt;oldname&gt; &lt;newname&gt;</pp>
+      </slide>
+
+      <slide>
+        <h1>Commands for containers</h1>
+
+        Run a command in a new container:
+        <pp>docker run &lt;imagename&gt;</pp>
+
+        Start a stopped container:
+        <pp>docker start &lt;container&gt;</pp>
+
+        Stop a running container:
+        <pp>docker stop &lt;container&gt;</pp>
+
+        Kill a running container:
+        <pp>docker kill &lt;container&gt;</pp>
+
+        Remove one or more containers:
+        <pp>docker rmi &lt;container&gt;</pp>
+
+        List running containers:
+        <pp>docker ps</pp>
+
+        List all containers:
+        <pp>docker ps -a</pp>
+      </slide>
+
+      <slide>
+        <h1>Docker run</h1>
+
+        My favorite run options:
+        <pp>Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+  -a, --attach=[]            Attach to STDIN, STDOUT or STDERR
+  -d, --detach=false       Run container in background and print container ID
+  -e, --env=[]                Set environment variables
+  --link=[]                     Add link to another container
+  --name                       Give the container a symbolic name
+  --restart="no"             Restart policy (no, on-failure[:max-retry], always)
+  --rm=false                  Automatically remove the container when it exits
+  -v, --volume=[]           Bind mount a volume
+      </slide>
+
+      <slide>
+        <h1>Further Commands</h1>
+
+        Run a command in a running container
+        <pp>docker exec &lt;container&gt; &lt;command&gt;</pp>
+
+        Start a shell in a running container
+        <pp>docker exec -it &lt;container&gt; bash</pp>
+
+        Show the containers metadata:
+        <pp>docker inspect &lt;container&gt;</pp>
+
+        Create a new image from a container's changes:
+        <pp>docker commit &lt;container&gt; &lt;imagename&gt;</pp>
+      </slide>
+
+      <slide>
+        <h1>Your own docker Images</h1>
+
+        1. create a <b>Dockerfile</b>, e.g.
+        <pp>FROM nginx
+
+COPY index.html /usr/share/nginx/html/</pp>
+
+        2. build the image
+        <pp>docker build -t my-nginx .</pp>
+      </slide>
+
+      <slide>
+        <h1>Further reading</h1>
+        <h3><a href="https://www.docker.com/">https://www.docker.com/</a></h3>
+        <h3><a href="https://www.docker.com/reference/commandline/cli/">Commandline reference</a></h3>
+        <h3><a href="https://www.docker.com/reference/commandline/builder/">Dockerfile reference</a></h3>
+        <h3><a href="https://registry.hub.docker.com/">Registry</a></h3>
+      </slide>
+    </slides>
+  </body>
+</html>
