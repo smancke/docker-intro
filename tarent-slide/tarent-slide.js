@@ -1,12 +1,10 @@
-var app = angular.module('presentation', 
-                         []);
 
-app.factory('slidedeck', ['$location', function($location) {
+function newSlideDeck() {
     var slidedeck = {
         touchpositionX: undefined,
 	slides: [],
 	activeSlide: null,	
-
+        
 	addSlide: function(elem) {
 	    this.slides.push($(elem).attr('id'));
 
@@ -16,7 +14,8 @@ app.factory('slidedeck', ['$location', function($location) {
                 this.activeSlide = slideId;
 	    }
 
-	    if (this.slides.length-1 == ($location.search()).slide) {
+            var initialSlideIndex = location.hash.replace("#?slide=", "");
+	    if (this.slides.length-1 == initialSlideIndex) {
 		this.showSlide($(elem).attr('id'));
 	    }
 	},
@@ -26,7 +25,7 @@ app.factory('slidedeck', ['$location', function($location) {
 	    $('#' + slideId).addClass('active-slide');
 
 	    this.activeSlide = slideId;
-	    location.hash = '?slide='+this.slides.indexOf(slideId); 
+	    location.hash = '?slide='+this.slides.indexOf(slideId);
 	},
 	
 	nextSlide: function() {
@@ -50,6 +49,14 @@ app.factory('slidedeck', ['$location', function($location) {
 	lastSlide: function() {
 	    this.showSlide(this.slides[this.slides.length-1]);
 	},
+
+        addAllSlides: function() {
+            $('slide').each(function(index, elem) {
+        
+		$(elem).attr('id', 'slide-' + Math.random().toString(36).substring(7));
+	        slidedeck.addSlide(elem);
+	    });
+        }
     }
 
     $(document).bind('touchstart', function(event) {
@@ -102,67 +109,7 @@ app.factory('slidedeck', ['$location', function($location) {
 	    break;
 	}
     });
-
+    
     return slidedeck;
-}]);
+};
 
-app.directive('slide', ['slidedeck', function (slidedeck) {
-    return {
-	restrict: 'AE',
-
-	link: function (scope, elem, attrs) {
-
-	    if (attrs.id == undefined)
-		$(elem).attr('id', 'slide-' + Math.random().toString(36).substring(7));
-
-	    slidedeck.addSlide(elem, attrs);
-	}		
-    }
-}]);
-
-app.directive('pp', [function () {
-    return {
-	restrict: 'AE',
-        template: '<pre class="prettyprint" ng-transclude></pre>',
-        transclude: true
-    }
-}]);
-
-app.directive('lang', ['$rootScope', '$location', function ($rootScope, $location) {
-    if (! $rootScope.language) {
-        if ($location.search().lang) {
-            $rootScope.language = $location.search().lang;
-        } else {
-            $rootScope.language = 'en';
-        }
-    }
-
-    return {
-	restrict: 'A',
-        
-	link: function (scope, elem, attrs) {
-            function update(language) {
-                if (attrs.lang == language) {
-                    $(elem).show();
-                } else {
-                    $(elem).hide();
-                }
-            }
-            update(scope.$root.language);
-            scope.$root.$watch('language', function(newValue, oldValue) {
-                update(newValue);
-            });
-        }
-    }
-}]);
-
-
-app.controller('LanguageCtrl', function($scope, $location) {
-    $scope.changeLang = function(language) {
-        $scope.$root.language = language;
-        $location.search('lang', language);
-    };
-    $scope.isActive = function(language) {
-        return $scope.$root.language == language;
-    };
-});

@@ -1,11 +1,12 @@
 
+
 body {
     background: black;
     overflow-y: hidden;
     overflow-x: hidden; 
 }
 
-slides {
+.slides {
     position:absolute; 
     top:0; bottom:0; left:0; right:0;
     margin:auto; 
@@ -31,12 +32,26 @@ slides {
 }
 
 
+p {
+    margin-top: 20px;
+}
+
 slide {
     display: none;
 }
 
 .active-slide {
     display: block;
+}
+
+border-bottom: 1px solid #eee;
+    font-size: 1.75em;
+    line-height: 1.225;
+    padding-bottom: 0.3em;
+}
+ 
+h2 {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 *,h1,h2,h3,h4,h5,h6 {
@@ -62,10 +77,11 @@ h1 {
 }
 
 h2 {
+    margin-top: 40px;
+    margin-bottom: 16px;
     font-weight: 600;
     font-size: 36px;
     line-height: 36px;
-    margin-bottom: 16px;
 }
 
 h3 {
@@ -90,11 +106,25 @@ h3 {
     src: url("./SourceCodePro-Light.otf.woff") format('woff');
 }
 pre {
-    font-size: 18px;
-    font-family:SourceCodePro, Droid Sans Mono, monospace;
+    margin-top: 20px;
+    border: 0px;
+    font-size: 22px;
+}
+code {
+    color: #000;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-bottom: 0px;
+    padding-top: 8px;
+    margin-top: 10px;
+    font: 22px Consolas,"Liberation Mono",Menlo,Courier,monospace;
+    background-color: #f7f7f7;
+    border: 0px;
+    //font-family:SourceCodePro, Droid Sans Mono, monospace;
 }
 pre > span {
-    font-size: 18px;
+    font-size: 22px;
+    font: 22px Consolas,"Liberation Mono",Menlo,Courier,monospace;
     font-family:SourceCodePro, Droid Sans Mono, monospace;
 }
 
