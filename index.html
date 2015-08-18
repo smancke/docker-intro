@@ -29,10 +29,13 @@
            $(lastHeader).nextUntil(firstSlide).andSelf().detach().appendTo(newSlide);
 
            newSlideDeck().addAllSlides();
+           //$('code').attr('contenteditable', 'true');
          }
-         window.setTimeout(function() {
-           updateMarkdown(etagNew);
-         }, 100);
+         if (location.hostname == '127.0.0.1' || location.hostname == 'localhost') {
+           window.setTimeout(function() {
+             updateMarkdown(etagNew);
+           }, 100);
+         }
        })
      }
      
@@ -41,16 +44,18 @@
      });
     </script>
   </head>
-  <body class="slides">
-    <slide>
-      <img style="float: right; margin-top: 400px; width: 700px;" src="res/docker.png">
-      <div style="clear: both; margin-right: 20px;">
-        <p>
-          <h2 style="text-align: right">Sebastian Mancke</h2>
-          <h6 style="text-align: right">Creative Commons BY-SA 3.0</h6>
-        </p>
-      </div>
-    </slide>
-    <div id="content"/>
+  <body>
+    <div class="slides">
+      <slide>
+        <img style="float: right; margin-top: 400px; width: 700px;" src="res/docker.png">
+        <div style="clear: both; margin-right: 20px;">
+          <p>
+            <h2 style="text-align: right">Sebastian Mancke</h2>
+            <h6 style="text-align: right">Creative Commons BY-SA 3.0</h6>
+          </p>
+        </div>
+      </slide>
+      <div id="content"></div>
+    </div>
   </body>
 </html>

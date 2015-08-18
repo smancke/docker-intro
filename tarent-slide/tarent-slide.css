@@ -111,6 +111,7 @@ pre {
     font-size: 22px;
 }
 code {
+    contentEditable: true;
     color: #000;
     padding-left: 6px;
     padding-right: 6px;
