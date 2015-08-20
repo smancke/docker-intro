@@ -283,7 +283,7 @@ Especially on test and build systems this should be part of a cron job.
             docker rmi $(docker images -q -f dangling=true)
     fi
 
-Dockerfiles
+docker build
 =====================
 
 The normal way to create images is through `Dockerfile` build descriptions.
@@ -305,7 +305,7 @@ Note:
 - Every creation steps is cached, so repeated builds are fast
 
 
-Dockerfiles FROM & MAINTAINER
+Dockerfile
 =====================
 
 FROM
@@ -330,8 +330,34 @@ Example:
 
     MAINTAINER Sebastian Mancke <s.mancke@tarent.de>
 
+Dockerfile
+=====================
 
-Dockerfiles CMD
+COPY
+--------
+`COPY` can be used to copy files or directories to the image.
+
+    COPY <src>... <dest>
+
+- Source can contain wildcards
+- If dest does not exist it will be created
+
+Example: 
+
+    COPY service.config /etc/service/
+    COPY service.config /etc/service/myconfig.cfg
+    COPY *.config /etc/service/
+    COPY cfg/ /etc/service/
+
+Dockerfile
+=====================
+
+Exercise
+----------
+
+Recreate your webserver image with static content using `docker build`
+
+Dockerfile
 =====================
 
 CMD
@@ -355,7 +381,27 @@ Example:
 
     CMD ["nginx", "-g", "daemon off;"]
 
-Dockerfiles RUN
+Dockerfile
+=====================
+
+ENTRYPOINT
+-----------
+
+The command in `ENTRYPOINT` will be executed on startup and allows you to configure a container that will run as an executable.
+
+- The arguments in `CMD` are passed to the entrypoint by default
+- If supplied, the `docker run` arguments overwrite those of the `CMD` and are passed as entrypoints arguments.
+
+The exec form (preferred):
+
+    ENTRYPOINT ["executable", "param1", "param2"]
+
+Example: 
+
+    ENTRYPOINT ["top", "-b"]
+    CMD ["-c"]
+
+Dockerfile
 =====================
 
 RUN
@@ -374,27 +420,50 @@ Example:
         apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
         rm -rf /var/lib/apt/lists/*
 
+Dockerfile
+==========================
 
-Dockerfiles COPY
+Exercise
+----------
+Create a `greeting` image which can echo a configurable hello world greeting message in ascii art (e.g. using the ubuntu package figlet):
+
+    docker run --rm greeting
+    >  _   _       _ _         __  __                  _
+    > | | | | __ _| | | ___   |  \/  | __ _ _ ____   _(_)_ __
+    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \ 
+    > |  _  | (_| | | | (_) | | |  | | (_| | |   \ V /| | | | |
+    > |_| |_|\__,_|_|_|\___/  |_|  |_|\__,_|_|    \_/ |_|_| |_|
+
+    docker run --rm -e message=Hi greeting Arthur
+    >  _   _ _      _         _   _
+    > | | | (_)    / \   _ __| |_| |__  _   _ _ __ 
+    > | |_| | |   / _ \ | '__| __| '_ \| | | | '__|
+    > |  _  | |  / ___ \| |  | |_| | | | |_| | |
+    > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
+
+
+Dockerfile
 =====================
 
-COPY
---------
-`COPY` can be used to copy files or directories to the image.
+ENV
+------------------------
+`ENV` sets environment variables which are present during container build and remain existent in the image.
 
-    COPY <src>... <dest>
+    ENV <key> <value>
+    ENV <key>=<value> ...
 
-- Source can contain wildcards
-- If dest does not exist it will be created
+On container startup they can be overwritten with the `-e` or `--env` option:
 
-Example: 
+    docker run -e key=value my_image
 
-    COPY service.config /etc/service/
-    COPY service.config /etc/service/myconfig.cfg
-    COPY *.config /etc/service/
-    COPY cfg/ /etc/service/
+Example:
 
-Dockerfiles ADD
+    docker run -e message='The answer is' -e answer=42 \
+        ubuntu \
+        bash -c 'echo $message $answer'
+    The answer is 42
+
+Dockerfile
 =====================
 
 ADD
@@ -411,8 +480,39 @@ Example:
 
     ADD configs.tar.gz /etc/service/
 
-ENV & VOLUME & EXPOSE
-=======================
+Dockerfile 
+=====================
+
+VOLUME
+------------------------
+Declare folders for volume mounts.
+
+    VOLUME ["/data"]
+
+Benefit:
+-------
+- The user of you image has explicit documentation the available mounts
+- The docker deamon and cloud tools can persist and backup them
+- You can use the volumes from other containers by
+
+        docker run --volumes-from container_with_volumes
+
+Dockerfile 
+=====================
+
+EXPOSE
+------------------------
+With `EXPOSE` an image can declare the ports which should be exported.
+
+    EXPOSE <port> [<port>...]
+
+Benefit:
+-------
+- This information is needed for communication between linked containers
+- The exposed Ports can be uses by the `docker run -P`:
+
+        -P, --publish-all=false  Publish all exposed ports to random ports
+
 
 Example nginx
 =================
@@ -438,6 +538,7 @@ Example nginx
     EXPOSE 80 443
 
     CMD ["nginx", "-g", "daemon off;"]
+
 
 Further reading
 ===============

@@ -3,11 +3,11 @@
     <title>docker intro</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=800" />
-    <link href="lib/bootstrap.css" rel="stylesheet" />
-    <script src="lib/jquery.min.js"></script>
-    <script src="lib/markdown.min.js"></script>
-    <script src="tarent-slide/tarent-slide.js"></script>
-    <link rel="stylesheet" href="tarent-slide/tarent-slide.css">
+    <link href="slide/lib/bootstrap.css" rel="stylesheet" />
+    <script src="slide/lib/jquery.min.js"></script>
+    <script src="slide/lib/markdown.min.js"></script>
+    <script src="slide/tarent-slide.js"></script>
+    <link rel="stylesheet" href="slide/tarent-slide.css">
     <style>
     </style>
     <script>
@@ -29,7 +29,6 @@
            $(lastHeader).nextUntil(firstSlide).andSelf().detach().appendTo(newSlide);
 
            newSlideDeck().addAllSlides();
-           //$('code').attr('contenteditable', 'true');
          }
          if (location.hostname == '127.0.0.1' || location.hostname == 'localhost') {
            window.setTimeout(function() {
@@ -47,7 +46,7 @@
   <body>
     <div class="slides">
       <slide>
-        <img style="float: right; margin-top: 400px; width: 700px;" src="res/docker.png">
+        <img style="float: right; margin-top: 400px; width: 700px;" src="images/docker.png">
         <div style="clear: both; margin-right: 20px;">
           <p>
             <h2 style="text-align: right">Sebastian Mancke</h2>
