@@ -149,13 +149,6 @@ ul li ul li:before {
     font-weight: 600;
 }
 
-ul > li:before {
-    content: '\00B7';
-    margin-left: -1em;
-    position: absolute;
-    font-weight: 600;
-}
-
 ul ul {
     margin-top: .5em;
 }
