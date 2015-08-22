@@ -1,5 +1,5 @@
 
-Docker Into
+Docker Intro
 ===============
 
 This is an Docker introduction slide deck:
@@ -20,8 +20,6 @@ What is Docker
 
 Key concepts
 ----------------
-
-
 * Defined environment for launching processes
 * Clean separation of environments
 * Sandbox with defined resources
@@ -69,6 +67,7 @@ Docker Container
 ---------------
 
 * An instance of an image
+* Should nor be used immutable modified
 * Maintains changes within the filesystems
 * Can be started, stopped, restarted, ..
       
@@ -539,6 +538,90 @@ Example nginx
 
     CMD ["nginx", "-g", "daemon off;"]
 
+
+Setup multiple containers
+==========================
+
+The power of docker comes in, when you compose you apps out of multiple containers.
+
+- Linking Containers
+- Docker Compose
+- gig 
+
+Linking Containers
+===================
+Docker has the concept of liks between contianer:
+
+- Get the container name into /etc/hosts
+- Set sehll variables for the container
+- Access to not exposed ports of the container
+
+Example:
+----------
+    docker run --name nginx -d nginx
+    docker run --rm --link nginx ubuntu \
+        bash -c 'echo -e "GET / HTTP/1.1\nHost: nginx\n" | netcat nginx 80'
+
+Exercise:
+----------
+- Check the /etc/hosts of the ubuntu container
+- Take a Look at the environment variables
+
+docker-compose
+================
+Einfaches docker tool zum starten mehrerer container
+
+Installation:
+----------------
+
+    curl -L https://github.com/docker/compose/releases/download/1.3.1/docker-compose-`uname -s`-`uname -m` > docker-compose
+    chmod a+x docker-compose
+
+Configuration über `docker-compose.yml`:
+
+    web:
+      build: .
+      ports:
+        - "5000:5000"
+      volumes:
+        - .:/code
+      links:
+        - redis
+    redis:
+      image: redis
+
+
+docker-compose:
+==================
+    Usage:
+      docker-compose [options] [COMMAND] [ARGS...]
+      docker-compose -h|--help
+    
+    Commands:
+      build              Build or rebuild services
+      help               Get help on a command
+      kill               Kill containers
+      logs               View output from containers
+      port               Print the public port for a port binding
+      ps                 List containers
+      pull               Pulls service images
+      restart            Restart services
+      rm                 Remove stopped containers
+      run                Run a one-off command
+      scale              Set number of containers for a service
+      start              Start services
+      stop               Stop services
+      up                 Create and start containers
+      migrate-to-labels  Recreate containers to add labels
+
+Linking Containers
+===================
+
+Exercise
+----------
+- Setup an nginx
+- linked to a NoSQL Database (e.g. elasticsearch)
+- restricting the access
 
 Further reading
 ===============
