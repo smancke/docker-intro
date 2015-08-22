@@ -126,8 +126,8 @@ My favorite run options:
      --restart="no"     Restart policy (no, on-failure[:max-retry], always)
      --rm=false         Automatically remove the container when it exits
      -d, --detach=false Run container in background and print container ID
-     -a, --attach=[]    Attach to STDIN, STDOUT or STDERR
      -i, --interactive=false   Keep STDIN open even if not attached
+     -t, --tty=false    Allocate a pseudo-TTY
 
 Exercise:
 ----------
@@ -550,7 +550,7 @@ The power of docker comes in, when you compose you apps out of multiple containe
 
 Linking Containers
 ===================
-Docker has the concept of liks between contianer:
+Docker has the concept of links between contianer:
 
 - Get the container name into /etc/hosts
 - Set sehll variables for the container
@@ -562,10 +562,9 @@ Example:
     docker run --rm --link nginx ubuntu \
         bash -c 'echo -e "GET / HTTP/1.1\nHost: nginx\n" | netcat nginx 80'
 
-Exercise:
-----------
-- Check the /etc/hosts of the ubuntu container
-- Take a Look at the environment variables
+Inter Container Communication
+----------------------------------
+- Start the docker daemon with `--icc=false --iptables=true` to disable inter container communication by default.
 
 docker-compose
 ================
