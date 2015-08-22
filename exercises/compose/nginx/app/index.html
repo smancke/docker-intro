@@ -1,0 +1,12 @@
+<html ng-app="books">
+  <head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>  
+  <script src="app.js"></script>  
+  </head>
+  <body ng-controller="BooksCtrl">
+    <ul>
+      <li ng-repeat="book in books">{{book._source.title}}</li>
+    </ul>
+  </body>
+</html>
+
