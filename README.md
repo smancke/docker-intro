@@ -592,7 +592,7 @@ Einfaches docker tool zum starten mehrerer container
 Installation:
 ----------------
 
-    curl -L https://github.com/docker/compose/releases/download/1.3.1/docker-compose-`uname -s`-`uname -m` > docker-compose
+    curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > docker-compose
     chmod a+x docker-compose
 
 Configuration über `docker-compose.yml`:
