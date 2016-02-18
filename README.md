@@ -45,22 +45,20 @@ docker-machine
 ===================
 Simple wrapper over virtualbox (or other backends) to create and manage a docker host.
 
-```shell
-# create a new machine
-docker-machine create --driver=virtualbox dev
+    # create a new machine
+    docker-machine create --driver=virtualbox dev
 
-# update the vm image of machine `dev`
-docker-machine update dev
+    # update the vm image of machine `dev`
+    docker-machine update dev
 
-# list available machines
-docker-machine
+    # list available machines
+    docker-machine
 
-# activate enviroment variable to machine `dev`
-eval $(docker-machine env dev)
+    # activate enviroment variable to machine `dev`
+    eval $(docker-machine env dev)
 
-# ssh into machine `dev`
-docker-machine ssh dev
-```
+    # ssh into machine `dev`
+    docker-machine ssh dev
 
 The docker hello world
 =========================
