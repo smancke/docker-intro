@@ -48,11 +48,15 @@ Simple wrapper over virtualbox (or other backends) to create and manage a docker
     # create a new machine
     docker-machine create --driver=virtualbox dev
 
-    # update the vm image of machine `dev`
-    docker-machine update dev
+    # start an existing machine
+    docker-machine start dev
+
+    # upgrade the vm image of machine `dev`
+    # must be running
+    docker-machine upgrade dev
 
     # list available machines
-    docker-machine
+    docker-machine ls
 
     # activate enviroment variable to machine `dev`
     eval $(docker-machine env dev)
@@ -439,6 +443,27 @@ Example:
         rm -rf /var/lib/apt/lists/*
 
 Dockerfile
+=====================
+
+ENV
+------------------------
+`ENV` sets environment variables which are present during container build and remain existent in the image.
+
+    ENV <key> <value>
+    ENV <key>=<value> ...
+
+On container startup they can be overwritten with the `-e` or `--env` option:
+
+    docker run -e key=value my_image
+
+Example:
+
+    docker run -e message='The answer is' -e answer=42 \
+        ubuntu \
+        bash -c 'echo $message $answer'
+    The answer is 42
+
+Dockerfile
 ==========================
 
 Exercise
@@ -459,27 +484,6 @@ Create a `greeting` image which can echo a configurable hello world greeting mes
     > |  _  | |  / ___ \| |  | |_| | | | |_| | |
     > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
 
-
-Dockerfile
-=====================
-
-ENV
-------------------------
-`ENV` sets environment variables which are present during container build and remain existent in the image.
-
-    ENV <key> <value>
-    ENV <key>=<value> ...
-
-On container startup they can be overwritten with the `-e` or `--env` option:
-
-    docker run -e key=value my_image
-
-Example:
-
-    docker run -e message='The answer is' -e answer=42 \
-        ubuntu \
-        bash -c 'echo $message $answer'
-    The answer is 42
 
 Dockerfile
 =====================
@@ -509,7 +513,7 @@ Declare folders for volume mounts.
 
 Benefit:
 -------
-- The user of you image has explicit documentation the available mounts
+- The user of your image has explicit documentation of the available mounts
 - The docker deamon and cloud tools can persist and backup them
 - You can use the volumes from other containers by
 
@@ -527,7 +531,7 @@ With `EXPOSE` an image can declare the ports which should be exported.
 Benefit:
 -------
 - This information is needed for communication between linked containers
-- The exposed Ports can be uses by the `docker run -P`:
+- The exposed ports can be uses by the `docker run -P`:
 
         -P, --publish-all=false  Publish all exposed ports to random ports
 
@@ -561,7 +565,7 @@ Example nginx
 Setup multiple containers
 ==========================
 
-The power of docker comes in, when you compose you apps out of multiple containers.
+The power of docker comes in, when you compose your apps out of multiple containers.
 
 - Linking Containers
 - Docker Compose
@@ -587,7 +591,7 @@ Inter Container Communication
 
 docker-compose
 ================
-Einfaches docker tool zum starten mehrerer container
+Einfaches Docker-Tool zum Starten mehrerer Container
 
 Installation:
 ----------------
@@ -595,7 +599,7 @@ Installation:
     curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > docker-compose
     chmod a+x docker-compose
 
-Configuration über `docker-compose.yml`:
+Konfiguration über `docker-compose.yml`:
 
     web:
       build: .
@@ -609,7 +613,7 @@ Configuration über `docker-compose.yml`:
       image: redis
 
 
-docker-compose:
+docker-compose
 ==================
     Usage:
       docker-compose [options] [COMMAND] [ARGS...]
