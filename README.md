@@ -513,7 +513,7 @@ Declare folders for volume mounts.
 
 Benefit:
 -------
-- The user of you image has explicit documentation the available mounts
+- The user of your image has explicit documentation of the available mounts
 - The docker deamon and cloud tools can persist and backup them
 - You can use the volumes from other containers by
 
