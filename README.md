@@ -531,7 +531,7 @@ With `EXPOSE` an image can declare the ports which should be exported.
 Benefit:
 -------
 - This information is needed for communication between linked containers
-- The exposed Ports can be uses by the `docker run -P`:
+- The exposed ports can be uses by the `docker run -P`:
 
         -P, --publish-all=false  Publish all exposed ports to random ports
 
