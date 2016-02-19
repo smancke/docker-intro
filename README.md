@@ -48,11 +48,15 @@ Simple wrapper over virtualbox (or other backends) to create and manage a docker
     # create a new machine
     docker-machine create --driver=virtualbox dev
 
-    # update the vm image of machine `dev`
-    docker-machine update dev
+    # start an existing machine
+    docker-machine start dev
+
+    # upgrade the vm image of machine `dev`
+    # must be running
+    docker-machine upgrade dev
 
     # list available machines
-    docker-machine
+    docker-machine ls
 
     # activate enviroment variable to machine `dev`
     eval $(docker-machine env dev)
