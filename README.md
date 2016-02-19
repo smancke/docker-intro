@@ -443,6 +443,27 @@ Example:
         rm -rf /var/lib/apt/lists/*
 
 Dockerfile
+=====================
+
+ENV
+------------------------
+`ENV` sets environment variables which are present during container build and remain existent in the image.
+
+    ENV <key> <value>
+    ENV <key>=<value> ...
+
+On container startup they can be overwritten with the `-e` or `--env` option:
+
+    docker run -e key=value my_image
+
+Example:
+
+    docker run -e message='The answer is' -e answer=42 \
+        ubuntu \
+        bash -c 'echo $message $answer'
+    The answer is 42
+
+Dockerfile
 ==========================
 
 Exercise
@@ -463,27 +484,6 @@ Create a `greeting` image which can echo a configurable hello world greeting mes
     > |  _  | |  / ___ \| |  | |_| | | | |_| | |
     > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
 
-
-Dockerfile
-=====================
-
-ENV
-------------------------
-`ENV` sets environment variables which are present during container build and remain existent in the image.
-
-    ENV <key> <value>
-    ENV <key>=<value> ...
-
-On container startup they can be overwritten with the `-e` or `--env` option:
-
-    docker run -e key=value my_image
-
-Example:
-
-    docker run -e message='The answer is' -e answer=42 \
-        ubuntu \
-        bash -c 'echo $message $answer'
-    The answer is 42
 
 Dockerfile
 =====================
