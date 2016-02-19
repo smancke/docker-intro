@@ -591,7 +591,7 @@ Inter Container Communication
 
 docker-compose
 ================
-Einfaches docker tool zum starten mehrerer container
+Einfaches Docker-Tool zum Starten mehrerer Container
 
 Installation:
 ----------------
@@ -599,7 +599,7 @@ Installation:
     curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > docker-compose
     chmod a+x docker-compose
 
-Configuration über `docker-compose.yml`:
+Konfiguration über `docker-compose.yml`:
 
     web:
       build: .
@@ -613,7 +613,7 @@ Configuration über `docker-compose.yml`:
       image: redis
 
 
-docker-compose:
+docker-compose
 ==================
     Usage:
       docker-compose [options] [COMMAND] [ARGS...]
