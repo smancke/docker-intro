@@ -565,7 +565,7 @@ Example nginx
 Setup multiple containers
 ==========================
 
-The power of docker comes in, when you compose you apps out of multiple containers.
+The power of docker comes in, when you compose your apps out of multiple containers.
 
 - Linking Containers
 - Docker Compose
