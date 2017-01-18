@@ -12,8 +12,14 @@ Contents:
 ----------
 1. __Intro__
 1. __Command line interface__
-1. __Dockerfiles__
-1. __docker-compose__
+1. __Build Docker Images__
+1. __Multiple Containers__
+1. __Docker Swarm__
+
+Part 1
+=========================
+
+## Intro
 
 What is Docker
 ================
@@ -59,6 +65,11 @@ Simple wrapper over virtualbox (or other backends) to create and manage a docker
 
     # ssh into machine `dev`
     docker-machine ssh dev
+
+Part 2
+=========================
+
+## Command line interface
 
 The docker hello world
 =========================
@@ -301,6 +312,11 @@ Especially on test and build systems this should be part of a cron job.
             docker rmi $(docker images -q -f dangling=true)
     fi
 
+Part 3
+=========================
+
+## Build Docker Images
+
 docker build
 =====================
 
@@ -336,17 +352,6 @@ The `FROM` instruction sets the Base Image:
 Example: 
 
     FROM nginx:15:04
-
-MAINTAINER
--------------
-
-The `MAINTAINER` instruction sets the Author:
-
-    MAINTAINER <name>
-
-Example: 
-
-    MAINTAINER Sebastian Mancke <s.mancke@tarent.de>
 
 Dockerfile
 =====================
@@ -558,95 +563,231 @@ Example nginx
     CMD ["nginx", "-g", "daemon off;"]
 
 
-Setup multiple containers
+Part 4
+=========================
+
+## Multiple Containers
+
+Multiple containers
 ==========================
 
-The power of docker comes in, when you compose you apps out of multiple containers.
+The power of docker comes in, when you compose your apps out of multiple containers.
 
-- Linking Containers
-- Docker Compose
-- gig 
+- Networking
+- docker-compose
 
-Linking Containers
-===================
-Docker has the concept of links between contianer:
+Networking Types
+=========================
 
-- Get the container name into /etc/hosts
-- Set sehll variables for the container
-- Access to not exposed ports of the container
+By default docker comes with the following networks:
 
-Example:
-----------
-    docker run --name nginx -d nginx
-    docker run --rm --link nginx ubuntu \
-        bash -c 'echo -e "GET / HTTP/1.1\nHost: nginx\n" | netcat nginx 80'
+    docker network ls
 
-Inter Container Communication
-----------------------------------
-- Start the docker daemon with `--icc=false --iptables=true` to disable inter container communication by default.
+    NETWORK ID          NAME                DRIVER
+    7fca4eb8c647        bridge              bridge
+    9f904ee27bf5        none                null
+    cf03ee007fb4        host                host
+
+Docker can manage networks of different types:
+
+* __host__: The host interface
+* __bridge__: Bridged network interfaces
+* __overlay__: Software defined multi host network (swarm only)
+
+Manage networks with:
+
+    docker network create|rm|inspect|ls
+
+Connect Networks
+=========================
+
+Containers can be connected to multiple networks.
+
+Network at startup:
+
+    docker run --net=<networkname> <image>
+
+Connect a running container:
+
+    docker network connect <networkname> <containerid>
+
+Disconnect a running container:
+
+    docker network disconnect <networkname> <containerid>
+
 
 docker-compose
 ================
-Einfaches docker tool zum starten mehrerer container
+docker-compose is a simple tool to start multiple containers.
 
 Installation:
 ----------------
 
-    curl -L https://github.com/docker/compose/releases/download/1.5.2/docker-compose-`uname -s`-`uname -m` > docker-compose
+    curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > docker-compose
     chmod a+x docker-compose
 
-Configuration über `docker-compose.yml`:
+Configuration by `docker-compose.yml`:
 
-    web:
-      build: .
-      ports:
-        - "5000:5000"
-      volumes:
-        - .:/code
-      links:
-        - redis
-    redis:
-      image: redis
+    version: '2'
+    services:
+      web:
+        build: .
+        ports:
+          - "5000:5000"
+        volumes:
+          - .:/code
+
+      redis:
+        image: redis
 
 
-docker-compose:
-==================
+docker-compose usage:
+=====================
     Usage:
       docker-compose [options] [COMMAND] [ARGS...]
       docker-compose -h|--help
     
     Commands:
+      up                 Create and start containers
+      down               Stop and remove containers, networks, images, and volumes
       build              Build or rebuild services
-      help               Get help on a command
-      kill               Kill containers
+      config             Validate and view the compose file
+      events             Receive real time events from containers
+      exec               Execute a command in a running container
       logs               View output from containers
-      port               Print the public port for a port binding
       ps                 List containers
-      pull               Pulls service images
+      pull               Pull service images
+      push               Push service images
       restart            Restart services
       rm                 Remove stopped containers
-      run                Run a one-off command
       scale              Set number of containers for a service
       start              Start services
       stop               Stop services
-      up                 Create and start containers
-      migrate-to-labels  Recreate containers to add labels
-
-Linking Containers
-===================
+      .. there are some more ..
 
 Exercise
-----------
-- Setup an nginx
-- linked to a NoSQL Database (e.g. elasticsearch)
-- restricting the access
+===================
+1. Setup a docker-compose project with:
+   - webserver with php
+   - database of choice (e.g. mysql, postgres, or nosql, ...)
+2. Implement a counter example im php
+3. Scale the webserver
+
+docker-compose best practices:
+==============================
+* Environment variables can be used
+* Additional environment variables can be defined in an environment file: `.env`
+* Image tags can be defined by variables
+* Compose files can be extended
+** Use one base file
+** One extension per environment
+
+Part 5
+=========================
+
+## Docker Swarm
+
+Docker Swarm
+=======================
+Swarm is a build in docker clustering mode.
+It provides:
+* Single master for communication with the cluster
+* Monitoring and failover between node
+* Scaling of containers
+* Load balancing of published ports
+
+
+Setup a swarm
+================
+Swarm setup with 3 virtualbox nodes
+
+Requirements:
+* Oracle Virtualbox muss installiert sein → https://www.virtualbox.org/wiki/Downloads
+* docker >= 1.12
+* docker-machine → https://docs.docker.com/machine/install-machine/
+
+
+Swarm - create machines
+=======================
+## Create three machines with docker-machine
+```
+for node in node-1 node-2 node-3; do
+    docker-machine create -d virtualbox --virtualbox-memory=1024 $node
+done
+```
+
+```
+docker-machine ls
+node-1             -        virtualbox   Running   tcp://192.168.99.100:2376             v1.12.6
+node-2             -        virtualbox   Running   tcp://192.168.99.101:2376             v1.12.6
+node-3             -        virtualbox   Running   tcp://192.168.99.102:2376             v1.12.6
+```
+
+Swarm - create cluster
+========================
+## Connect to node-1 and init the swarm master
+```
+eval $(docker-machine env node-1)
+docker swarm init --advertise-addr $(docker-machine ip node-1) \
+    --listen-addr $(docker-machine ip node-1):2377
+```
+
+## Join the master
+```
+TOKEN=$(docker swarm join-token -q worker)
+for node in node-2 node-3; do
+    eval $(docker-machine env $node)
+    docker swarm join --token $TOKEN $(docker-machine ip node-1):2377
+done
+```
+
+Swarm - create networks
+=========================
+## create the overlay netwoks
+```
+eval $(docker-machine env node-1)
+docker network create --driver overlay --subnet 10.10.1.0/24 logging
+docker network create --driver overlay --subnet 10.20.1.0/24 web
+```
+
+Swarm - create service
+=======================
+
+## Create web server
+```
+eval $(docker-machine env node-1)
+docker service create --name webserver \
+  --network logging,web -p 8080:80 nginx
+
+docker service create --name redis \
+  --network logging,web redis
+```
+
+Swarm - scale services
+===========================
+## scale up
+```
+docker service update --replicas 2 webserver
+```
+
+## scale down
+```
+docker service update --replicas 1 webserver
+```
+
 
 Further reading
 ===============
 [docker.com](https://www.docker.com)
 
+[Registry](https://hub.docker.com/)
+
 [Commandline reference](https://docs.docker.com/reference/commandline/cli/)
 
 [Dockerfile reference](https://docs.docker.com/reference/builder/)
 
-[Docker Registry](https://hub.docker.com/)
+[Networking](https://docs.docker.com/engine/userguide/networking/)
+
+[docker-compose](https://docs.docker.com/compose/)
+
+[Swarm](https://docs.docker.com/engine/swarm/)
