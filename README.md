@@ -677,14 +677,15 @@ Exercise
 2. Implement a counter example im php
 3. Scale the webserver
 
-docker-compose best practices:
+compose best practices
 ==============================
 * Environment variables can be used
 * Additional environment variables can be defined in an environment file: `.env`
 * Image tags can be defined by variables
 * Compose files can be extended
+
 ** Use one base file
-** One extension per environment
+ ** One extension per environment
 
 Part 5
 =========================
@@ -695,6 +696,7 @@ Docker Swarm
 =======================
 Swarm is a build in docker clustering mode.
 It provides:
+
 * Single master for communication with the cluster
 * Monitoring and failover between node
 * Scaling of containers
@@ -706,7 +708,8 @@ Setup a swarm
 Swarm setup with 3 virtualbox nodes
 
 Requirements:
-* Oracle Virtualbox muss installiert sein → https://www.virtualbox.org/wiki/Downloads
+
+* Oracle Virtualbox has to be installed → https://www.virtualbox.org/wiki/Downloads
 * docker >= 1.12
 * docker-machine → https://docs.docker.com/machine/install-machine/
 
@@ -714,70 +717,62 @@ Requirements:
 Swarm - create machines
 =======================
 ## Create three machines with docker-machine
-```
-for node in node-1 node-2 node-3; do
-    docker-machine create -d virtualbox --virtualbox-memory=1024 $node
-done
-```
 
-```
-docker-machine ls
-node-1             -        virtualbox   Running   tcp://192.168.99.100:2376             v1.12.6
-node-2             -        virtualbox   Running   tcp://192.168.99.101:2376             v1.12.6
-node-3             -        virtualbox   Running   tcp://192.168.99.102:2376             v1.12.6
-```
+    for node in node-1 node-2 node-3; do
+        docker-machine create -d virtualbox --virtualbox-memory=1024 $node
+    done
+
+
+    docker-machine ls
+    node-1             -        virtualbox   Running   tcp://192.168.99.100:2376             v1.12.6
+    node-2             -        virtualbox   Running   tcp://192.168.99.101:2376             v1.12.6
+    node-3             -        virtualbox   Running   tcp://192.168.99.102:2376             v1.12.6
 
 Swarm - create cluster
 ========================
 ## Connect to node-1 and init the swarm master
-```
-eval $(docker-machine env node-1)
-docker swarm init --advertise-addr $(docker-machine ip node-1) \
+
+    eval $(docker-machine env node-1)
+    docker swarm init --advertise-addr $(docker-machine ip node-1) \
     --listen-addr $(docker-machine ip node-1):2377
-```
 
 ## Join the master
-```
-TOKEN=$(docker swarm join-token -q worker)
-for node in node-2 node-3; do
-    eval $(docker-machine env $node)
-    docker swarm join --token $TOKEN $(docker-machine ip node-1):2377
-done
-```
+
+    TOKEN=$(docker swarm join-token -q worker)
+    for node in node-2 node-3; do
+        eval $(docker-machine env $node)
+        docker swarm join --token $TOKEN $(docker-machine ip node-1):2377
+    done
 
 Swarm - create networks
 =========================
 ## create the overlay netwoks
-```
-eval $(docker-machine env node-1)
-docker network create --driver overlay --subnet 10.10.1.0/24 logging
-docker network create --driver overlay --subnet 10.20.1.0/24 web
-```
+
+    eval $(docker-machine env node-1)
+    docker network create --driver overlay --subnet 10.10.1.0/24 logging
+    docker network create --driver overlay --subnet 10.20.1.0/24 web
 
 Swarm - create service
 =======================
 
 ## Create web server
-```
-eval $(docker-machine env node-1)
-docker service create --name webserver \
-  --network logging,web -p 8080:80 nginx
 
-docker service create --name redis \
-  --network logging,web redis
-```
+    eval $(docker-machine env node-1)
+    docker service create --name webserver \
+      --network logging,web -p 8080:80 nginx
+
+    docker service create --name redis \
+      --network logging,web redis
 
 Swarm - scale services
 ===========================
 ## scale up
-```
-docker service update --replicas 2 webserver
-```
+
+    docker service update --replicas 2 webserver
 
 ## scale down
-```
-docker service update --replicas 1 webserver
-```
+
+    docker service update --replicas 1 webserver
 
 
 Further reading
