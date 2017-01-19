@@ -312,7 +312,7 @@ Especially on test and build systems this should be part of a cron job.
     
     tagref=$(docker images -q -f dangling=true | wc -l)
 
-    if [ "$tagref" != "0" ]; then
+    if [ "$tagref" != "0" ]; then0
             docker rmi $(docker images -q -f dangling=true)
     fi
 
@@ -333,8 +333,9 @@ The normal way to create images is through `Dockerfile` build descriptions.
     
 2. build the image an give it a name
 
-        docker build -t my-nginx .
-      
+        docker build --pull -t my-nginx .
+
+
 Note:
 ---------------------
 - The build has the current directory as context
@@ -683,9 +684,8 @@ compose best practices
 * Additional environment variables can be defined in an environment file: `.env`
 * Image tags can be defined by variables
 * Compose files can be extended
-
-** Use one base file
- ** One extension per environment
+  * Use one base file
+  * One extension per environment
 
 Part 5
 =========================
@@ -730,6 +730,7 @@ Swarm - create machines
 
 Swarm - create cluster
 ========================
+
 ## Connect to node-1 and init the swarm master
 
     eval $(docker-machine env node-1)
@@ -746,6 +747,7 @@ Swarm - create cluster
 
 Swarm - create networks
 =========================
+
 ## create the overlay netwoks
 
     eval $(docker-machine env node-1)
@@ -766,6 +768,7 @@ Swarm - create service
 
 Swarm - scale services
 ===========================
+
 ## scale up
 
     docker service update --replicas 2 webserver
