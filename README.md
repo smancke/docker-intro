@@ -1,81 +1,90 @@
 
-Docker Intro
+docker workshop - about
 ===============
 
-This is an Docker introduction slide deck:
+this is a slide deck for an introductory docker workshop:
 
-Slides: <http://smancke.github.io/docker-intro>
+* slides: <http://tmstff.github.io/docker-workshop>
+* source: <https://github.com/tmstff/docker-workshop>
+* original slides by Sebastian Mancke: <https://github.com/smancke/docker-intro>
 
-Source <https://github.com/smancke/docker-intro>
+to run locally use any of these: <https://gist.github.com/willurd/5720255>
 
-Contents:
+e.g.
+
+```
+$ python -m SimpleHTTPServer 8000
+```
+
+
+
+docker workshop - contents
+===============
+
+contents:
 ----------
-1. __Intro__
-1. __Command line interface__
-1. __Build Docker Images__
-1. __Multiple Containers__
-1. __Docker Swarm__
+1. __intro__
+1. __docker command__
+1. __docker-compose command__
+1. __docker-compose at rewe__
+1. __create docker images__
 
-Part 1
-=========================
-
-## Intro
-
-What is Docker
+intro: images & containers
 ================
 
-Key concepts
+container
 ----------------
-* Defined environment for launching processes
-* Clean separation of environments
-* Sandbox with defined resources
-* One simple interface for launching applications
+* a linux process with isolated execution environment
+* sandbox with defined resources (e.g. file system)
+* uses kernel from underlying OS (not a virtualization)
+* based on an image (see below)
 
-What is Docker not!
+intro: images & containers
+================
+
+image
 --------------------
-* Not a virtualisation
-* No seperate kernel
-* No hypervisor
+* template for containers
+* file system diff to parent image
+* immutable
+* can be pulled from / pushed to a registry (default: <https://hub.docker.com/>)
 
-Installation
+![images](images/docker_images.png)
+
+intro: images & containers
+================
+
+![containers](images/docker_containers.png)
+
+intro: tools
 ===============
-Docker is linux based, but there exist convienent solutions to work on Windows and Mac OS X also.
 
-Detailed Instructions: <https://docs.docker.com/installation/>
+docker
+--------------------
+* manage images & containers (create, start, list etc.)
+* installation instructions: <https://docs.docker.com/installation/>
+* installation in Ubuntu and Debian: `curl https://get.docker.com/ | sh`
 
-The simple way for installation in Ubuntu and Debian:
+docker-compose
+--------------------
+* tool for defining and running multi-container Docker applications
+* installation instructions: <https://docs.docker.com/compose/install/>
 
-    curl https://get.docker.com/ | sh
-  
 docker-machine
-===================
-Simple wrapper over virtualbox (or other backends) to create and manage a docker host.
+--------------------
+* run docker engine on virtual and/or remote hostname
+* installation instructions: <https://docs.docker.com/machine/install-machine/>
 
-    # create a new machine
-    docker-machine create --driver=virtualbox dev
+intro: tools
+===============
 
-    # start an existing machine
-    docker-machine start dev
+docker swarm
+--------------------
+* native clustering for Docker
+* turns a pool of Docker hosts into a single, virtual Docker host
+* in Docker 1.12 and higher, Swarm mode is integrated with Docker Engine: <https://docs.docker.com/engine/swarm/>
 
-    # upgrade the vm image of machine `dev`
-    # must be running
-    docker-machine upgrade dev
-
-    # list available machines
-    docker-machine ls
-
-    # activate enviroment variable to machine `dev`
-    eval $(docker-machine env dev)
-
-    # ssh into machine `dev`
-    docker-machine ssh dev
-
-Part 2
-=========================
-
-## Command line interface
-
-The docker hello world
+docker - hello world!
 =========================
 
     docker run busybox echo 'Hello World'
@@ -85,28 +94,9 @@ What has happened?
 * Download the image `busybox`
 * Create a new container
 * Execute the `echo` command within the new container
-          
-Images and Containers
-==========================
 
-Docker Image
----------------
 
-* A template for containers
-* Can be pulled and pushed towards a registry
-* Image names have the form `[registry/][user/]name[:tag]`
-* The default for the tag is `latest`
-
-Docker Container
----------------
-
-* An instance of an image
-* Should nor be used immutable modified
-* Maintains changes within the filesystems
-* Can be started, stopped, restarted, ..
-      
-      
-Commands for image handling
+docker - commands for image handling
 ==============================
 
 search, pull & push
@@ -124,7 +114,7 @@ upload an image to the registry:
 
     docker push <image>
 
-Commands for image handling
+docker - commands for image handling
 ==============================
 
 list, tag & delete
@@ -142,22 +132,20 @@ delete an image locally:
 
     docker rmi <image>
 
-Docker run
+docker run
 ===============
 
 Start a new container
 
     docker run <imagename>
 
-My favorite run options:
-    
+Some run options:
+
     Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
      --name             Give the container a symbolic name
      -v, --volume=[]    Bind mount a volume
      -p, --publish=[]   Publish a container's port(s) to the host
      -e, --env=[]       Set environment variables
-     --link=[]          Add link to another container
-     --restart="no"     Restart policy (no, on-failure[:max-retry], always)
      --rm=false         Automatically remove the container when it exits
      -d, --detach=false Run container in background and print container ID
      -i, --interactive=false   Keep STDIN open even if not attached
@@ -167,7 +155,7 @@ Exercise:
 ----------
 Start an nginx web server with a custom `index.html` file.
 
-See your containers:
+docker ps
 ========================
 
 List containers
@@ -180,17 +168,8 @@ All containers:
 
     docker ps -a
 
-Show Metadata of a container
------------------------------
 
-    docker inspect <container>
-
-Output a special field of the metadata:
-
-    docker inspect --format='{{.Image}}' <container>
-
-
-Container Livecycle
+docker - container livecycle
 =========================
 
 Stop running containers:
@@ -210,7 +189,7 @@ Remove containers:
     docker rm <container..>
 
 
-Useful tricks: Container Id
+docker - useful tricks: container id
 ==============================
 
 give your containers a name
@@ -228,7 +207,7 @@ start containers in foreground and with `--rm`, when playing arround:
     docker run --rm nginx
 
 
-Interaction and debugging
+docker - interaction and debugging
 ==========================
 
 exec
@@ -251,77 +230,91 @@ copy files from and to docker container, e.g.
 
     docker cp my_webserver:/etc/nginx/nginx.conf ~/
 
-Interaction and debugging
+docker - interaction and debugging
 ==========================
 
 Exercise
 ----------
 1. Start a webserver
-2. Overwrite the content of the index.html
+2. Overwrite the content of the index.html (in the running container)
 3. Watch the webserver logs
 4. compare the output of `ps aux` from your container with the host
 
-
-Modify a container
-===================
-
-Inspect changes on a container's filesystem
-
-    docker diff <container>
-
-Create a new image from a container's changes:
-
-    docker commit <container> <imagename>
-
-Note:
--------
-
-- Docker uses layered filesystems, so images and containers only need to store the diff to the their base image
-
-
-Modify a container
-==========================
-
-Exercise
-----------
-1. Search online for the docker registry image 
-1. Start a private a docker image registry
-    - Search for the image at <https://hub.docker.com/>
-    - Start the image local
-1. Commit your containers changes from the previous exercise
-1. Push your new image to your private registry
-1. Delete the image local
-1. Start the image again (now comming from the registry)
-
-Useful tricks: Cleanup Script
+docker - useful tricks: cleanup script
 =======================================
 You have to cleanup your local images and old containers regulary.
 
     docker rm $(docker ps -q -a -f status=exited)
     docker rmi $(docker images -q -f dangling=true)
 
-
 Especially on test and build systems this should be part of a cron job.
 
-    
     exited=$(docker ps -q -a -f status=exited | wc -l)
-    
+
     if [ "$exited" != "0" ]; then
             docker rm $(docker ps -q -a -f status=exited)
     fi
-    
+
     tagref=$(docker images -q -f dangling=true | wc -l)
 
     if [ "$tagref" != "0" ]; then0
             docker rmi $(docker images -q -f dangling=true)
     fi
 
-Part 3
-=========================
+docker-compose
+================
+docker-compose is a simple tool to start multiple containers.
 
-## Build Docker Images
+Configuration by `docker-compose.yml`:
 
-docker build
+    version: '2'
+    services:
+      web:
+        build: .
+        ports:
+          - "5000:5000"
+        volumes:
+          - .:/code
+        links:
+          - "redis"
+
+      redis:
+        image: redis
+
+
+docker-compose usage
+=====================
+    Usage:
+      docker-compose [options] [COMMAND] [ARGS...]
+      docker-compose -h|--help
+
+    Commands: (selection)
+      up                 Create and start containers
+      down               Stop and remove containers, networks, images, and volumes
+      build              Build or rebuild services
+      logs               View output from containers
+      ps                 List containers
+      pull               Pull service images
+      rm                 Remove stopped containers
+      start              Start services
+      stop               Stop services
+      .. there are some more ..
+
+docker-compose Exercise
+===================
+1. Setup a docker-compose project with:
+   - webserver with php
+   - database of choice (e.g. mysql, postgres, or nosql, ...)
+2. Implement a counter example im php
+
+
+docker-compose at rewe
+===================
+
+real-world-example rewe-article-connector
+
+
+create docker images
 =====================
 
 The normal way to create images is through `Dockerfile` build descriptions.
@@ -330,7 +323,7 @@ The normal way to create images is through `Dockerfile` build descriptions.
 
         FROM nginx
         COPY index.html /usr/share/nginx/html/
-    
+
 2. build the image an give it a name
 
         docker build --pull -t my-nginx .
@@ -344,7 +337,7 @@ Note:
 - Every creation steps is cached, so repeated builds are fast
 
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 FROM
@@ -354,11 +347,11 @@ The `FROM` instruction sets the Base Image:
 
     FROM <image>:<tag>
 
-Example: 
+Example:
 
     FROM nginx:15:04
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 COPY
@@ -370,14 +363,14 @@ COPY
 - Source can contain wildcards
 - If dest does not exist it will be created
 
-Example: 
+Example:
 
     COPY service.config /etc/service/
     COPY service.config /etc/service/myconfig.cfg
     COPY *.config /etc/service/
     COPY cfg/ /etc/service/
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 Exercise
@@ -385,7 +378,7 @@ Exercise
 
 Recreate your webserver image with static content using `docker build`
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 CMD
@@ -405,11 +398,11 @@ The shell form:
 __Attention__: the shell form starts the command in a sub process, so it will not get
 the process id 1 and will not receive all signals e.g. from command line or `docker stop`.
 
-Example: 
+Example:
 
     CMD ["nginx", "-g", "daemon off;"]
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 ENTRYPOINT
@@ -424,12 +417,12 @@ The exec form (preferred):
 
     ENTRYPOINT ["executable", "param1", "param2"]
 
-Example: 
+Example:
 
     ENTRYPOINT ["top", "-b"]
     CMD ["-c"]
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 RUN
@@ -442,13 +435,13 @@ file system and produce a new layered container.
 
 It is common to tie related commands together into one RUN command, using shell magic.
 
-Example: 
+Example:
 
     RUN apt-get update && \
         apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
         rm -rf /var/lib/apt/lists/*
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 ENV
@@ -469,7 +462,7 @@ Example:
         bash -c 'echo $message $answer'
     The answer is 42
 
-Dockerfile
+create docker images - Dockerfile
 ==========================
 
 Exercise
@@ -479,19 +472,19 @@ Create a `greeting` image which can echo a configurable hello world greeting mes
     docker run --rm greeting
     >  _   _       _ _         __  __                  _
     > | | | | __ _| | | ___   |  \/  | __ _ _ ____   _(_)_ __
-    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \ 
+    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \
     > |  _  | (_| | | | (_) | | |  | | (_| | |   \ V /| | | | |
     > |_| |_|\__,_|_|_|\___/  |_|  |_|\__,_|_|    \_/ |_|_| |_|
 
     docker run --rm -e message=Hi greeting Arthur
     >  _   _ _      _         _   _
-    > | | | (_)    / \   _ __| |_| |__  _   _ _ __ 
+    > | | | (_)    / \   _ __| |_| |__  _   _ _ __
     > | |_| | |   / _ \ | '__| __| '_ \| | | | '__|
     > |  _  | |  / ___ \| |  | |_| | | | |_| | |
     > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
 
 
-Dockerfile
+create docker images - Dockerfile
 =====================
 
 ADD
@@ -501,14 +494,14 @@ ADD
 - If src is an URL, the file is downloaded
 - If src is a local tar archive, it will be extracted to dest
 
-Example: 
+Example:
 
     ADD https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.tar.gz /es/
     RUN cd /es && tar xvfz elasticsearch-1.4.4.tar.gz
 
     ADD configs.tar.gz /etc/service/
 
-Dockerfile 
+create docker images - Dockerfile
 =====================
 
 VOLUME
@@ -525,7 +518,7 @@ Benefit:
 
         docker run --volumes-from container_with_volumes
 
-Dockerfile 
+create docker images - Dockerfile
 =====================
 
 EXPOSE
@@ -542,7 +535,7 @@ Benefit:
         -P, --publish-all=false  Publish all exposed ports to random ports
 
 
-Example nginx
+create docker images - Example nginx
 =================
     FROM debian:jessie
 
@@ -566,230 +559,3 @@ Example nginx
     EXPOSE 80 443
 
     CMD ["nginx", "-g", "daemon off;"]
-
-
-Part 4
-=========================
-
-## Multiple Containers
-
-Multiple containers
-==========================
-
-The power of docker comes in, when you compose your apps out of multiple containers.
-
-- Networking
-- docker-compose
-
-Networking Types
-=========================
-
-By default docker comes with the following networks:
-
-    docker network ls
-
-    NETWORK ID          NAME                DRIVER
-    7fca4eb8c647        bridge              bridge
-    9f904ee27bf5        none                null
-    cf03ee007fb4        host                host
-
-Docker can manage networks of different types:
-
-* __host__: The host interface
-* __bridge__: Bridged network interfaces
-* __overlay__: Software defined multi host network (swarm only)
-
-Manage networks with:
-
-    docker network create|rm|inspect|ls
-
-Connect Networks
-=========================
-
-Containers can be connected to multiple networks.
-
-Network at startup:
-
-    docker run --net=<networkname> <image>
-
-Connect a running container:
-
-    docker network connect <networkname> <containerid>
-
-Disconnect a running container:
-
-    docker network disconnect <networkname> <containerid>
-
-
-docker-compose
-================
-docker-compose is a simple tool to start multiple containers.
-
-Installation:
-----------------
-
-    curl -L https://github.com/docker/compose/releases/download/1.9.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-    chmod a+x docker-compose
-
-Configuration by `docker-compose.yml`:
-
-    version: '2'
-    services:
-      web:
-        build: .
-        ports:
-          - "5000:5000"
-        volumes:
-          - .:/code
-
-      redis:
-        image: redis
-
-
-docker-compose usage:
-=====================
-    Usage:
-      docker-compose [options] [COMMAND] [ARGS...]
-      docker-compose -h|--help
-    
-    Commands:
-      up                 Create and start containers
-      down               Stop and remove containers, networks, images, and volumes
-      build              Build or rebuild services
-      config             Validate and view the compose file
-      events             Receive real time events from containers
-      exec               Execute a command in a running container
-      logs               View output from containers
-      ps                 List containers
-      pull               Pull service images
-      push               Push service images
-      restart            Restart services
-      rm                 Remove stopped containers
-      scale              Set number of containers for a service
-      start              Start services
-      stop               Stop services
-      .. there are some more ..
-
-Exercise
-===================
-1. Setup a docker-compose project with:
-   - webserver with php
-   - database of choice (e.g. mysql, postgres, or nosql, ...)
-2. Implement a counter example im php
-3. Scale the webserver
-
-compose best practices
-==============================
-* Environment variables can be used
-* Additional environment variables can be defined in an environment file: `.env`
-* Image tags can be defined by variables
-* Compose files can be extended
-  * Use one base file
-  * One extension per environment
-
-Part 5
-=========================
-
-## Docker Swarm
-
-Docker Swarm
-=======================
-Swarm is a build in docker clustering mode.
-It provides:
-
-* Single master for communication with the cluster
-* Monitoring and failover between node
-* Scaling of containers
-* Load balancing of published ports
-
-
-Setup a swarm
-================
-Swarm setup with 3 virtualbox nodes
-
-Requirements:
-
-* Oracle Virtualbox has to be installed → https://www.virtualbox.org/wiki/Downloads
-* docker >= 1.12
-* docker-machine → https://docs.docker.com/machine/install-machine/
-
-
-Swarm - create machines
-=======================
-## Create three machines with docker-machine
-
-    for node in node-1 node-2 node-3; do
-        docker-machine create -d virtualbox --virtualbox-memory=1024 $node
-    done
-
-
-    docker-machine ls
-    node-1             -        virtualbox   Running   tcp://192.168.99.100:2376             v1.12.6
-    node-2             -        virtualbox   Running   tcp://192.168.99.101:2376             v1.12.6
-    node-3             -        virtualbox   Running   tcp://192.168.99.102:2376             v1.12.6
-
-Swarm - create cluster
-========================
-
-## Connect to node-1 and init the swarm master
-
-    eval $(docker-machine env node-1)
-    docker swarm init --advertise-addr $(docker-machine ip node-1) \
-    --listen-addr $(docker-machine ip node-1):2377
-
-## Join the master
-
-    TOKEN=$(docker swarm join-token -q worker)
-    for node in node-2 node-3; do
-        eval $(docker-machine env $node)
-        docker swarm join --token $TOKEN $(docker-machine ip node-1):2377
-    done
-
-Swarm - create networks
-=========================
-
-## create the overlay netwoks
-
-    eval $(docker-machine env node-1)
-    docker network create --driver overlay --subnet 10.10.1.0/24 logging
-    docker network create --driver overlay --subnet 10.20.1.0/24 web
-
-Swarm - create service
-=======================
-
-## Create web server
-
-    eval $(docker-machine env node-1)
-    docker service create --name webserver \
-      --network logging,web -p 8080:80 nginx
-
-    docker service create --name redis \
-      --network logging,web redis
-
-Swarm - scale services
-===========================
-
-## scale up
-
-    docker service update --replicas 2 webserver
-
-## scale down
-
-    docker service update --replicas 1 webserver
-
-
-Further reading
-===============
-[docker.com](https://www.docker.com)
-
-[Registry](https://hub.docker.com/)
-
-[Commandline reference](https://docs.docker.com/reference/commandline/cli/)
-
-[Dockerfile reference](https://docs.docker.com/reference/builder/)
-
-[Networking](https://docs.docker.com/engine/userguide/networking/)
-
-[docker-compose](https://docs.docker.com/compose/)
-
-[Swarm](https://docs.docker.com/engine/swarm/)
