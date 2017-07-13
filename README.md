@@ -23,11 +23,22 @@ docker workshop - contents
 
 contents:
 ----------
+1. __prerequesits & expectations__
 1. __intro__
 1. __docker command__
 1. __docker-compose command__
 1. __docker-compose at rewe__
 1. __create docker images__
+1. __feedback__
+
+prerequesits & expectations
+================
+
+Do you already have experience with docker?
+
+Do you have docker and docker-compose installed on your machine?
+
+What do you expect from this workshop?
 
 intro: images & containers
 ================
@@ -412,6 +423,7 @@ The command in `ENTRYPOINT` will be executed on startup and allows you to config
 
 - The arguments in `CMD` are passed to the entrypoint by default
 - If supplied, the `docker run` arguments overwrite those of the `CMD` and are passed as entrypoints arguments.
+- can be overridden with `--entrypoint`, e.g. for debugging images with an error during startup.
 
 The exec form (preferred):
 
@@ -559,3 +571,15 @@ create docker images - Example nginx
     EXPOSE 80 443
 
     CMD ["nginx", "-g", "daemon off;"]
+
+
+feedback
+=================
+
+Were your expectations met?
+
+Was the workshop helpful?
+
+Do you think docker will be helpful for your work?
+
+What did you like / not like about the workshop?
