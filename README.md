@@ -67,6 +67,31 @@ intro: images & containers
 
 ![containers](images/docker_containers.png)
 
+intro: registry
+===============
+
+browse Docker Hub:
+
+    https://hub.docker.com/
+
+browse private registry:
+
+    docker run \
+      -d \
+      -e ENV_DOCKER_REGISTRY_HOST=your-private-registry \
+      -e ENV_DOCKER_REGISTRY_PORT=443 \
+      -e ENV_DOCKER_REGISTRY_USE_SSL=1 \
+      -p 8888:80 \
+      konradkleine/docker-registry-frontend:v2
+
+browser private registry via REST:
+
+    # repositories / images
+    curl https://your-private-registry/v2/_catalog?n=2000 | json_pp
+
+    # tags
+    curl https://your-private-registry/v2/some-service/tags/list | json_pp
+
 intro: tools
 ===============
 
