@@ -285,16 +285,18 @@ You have to cleanup your local images and old containers regulary.
 
 Especially on test and build systems this should be part of a cron job.
 
-    exited=$(docker ps -q -a -f status=exited | wc -l)
+    #!/bin/bash
+
+    exited=$(docker ps -q -a -f status=exited | wc -l | tr -d '[:space:]')
 
     if [ "$exited" != "0" ]; then
-            docker rm $(docker ps -q -a -f status=exited)
+        docker rm $(docker ps -q -a -f status=exited)
     fi
 
-    tagref=$(docker images -q -f dangling=true | wc -l)
+    tagref=$(docker images -q -f dangling=true | wc -l | tr -d '[:space:]')
 
-    if [ "$tagref" != "0" ]; then0
-            docker rmi $(docker images -q -f dangling=true)
+    if [ "$tagref" != "0" ]; then
+        docker rmi $(docker images -q -f dangling=true)
     fi
 
 docker-compose
