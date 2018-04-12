@@ -46,7 +46,7 @@ Detailed Instructions: <https://docs.docker.com/installation/>
 The simple way for installation in Ubuntu and Debian:
 
     curl https://get.docker.com/ | sh
-  
+
 docker-machine
 ===================
 Simple wrapper over virtualbox (or other backends) to create and manage a docker host.
@@ -85,7 +85,7 @@ What has happened?
 * Download the image `busybox`
 * Create a new container
 * Execute the `echo` command within the new container
-          
+
 Images and Containers
 ==========================
 
@@ -104,8 +104,8 @@ Docker Container
 * Should nor be used immutable modified
 * Maintains changes within the filesystems
 * Can be started, stopped, restarted, ..
-      
-      
+
+
 Commands for image handling
 ==============================
 
@@ -150,7 +150,7 @@ Start a new container
     docker run <imagename>
 
 My favorite run options:
-    
+
     Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
      --name             Give the container a symbolic name
      -v, --volume=[]    Bind mount a volume
@@ -163,9 +163,23 @@ My favorite run options:
      -i, --interactive=false   Keep STDIN open even if not attached
      -t, --tty=false    Allocate a pseudo-TTY
 
+Some option details
+====================
+
+* Publish port 80 from container as port 8080 on host: `-p 8080:80`
+* Mount local directory `/html` as directory `/usr/share/nginx/html`
+  in the container: `-v /html:/usr/share/nginx/html`
+  * “Mount” just means “make available”.
+  * `/usr/share/nginx/html` is where nginx expects HTML files.
+
 Exercise:
 ----------
-Start an nginx web server with a custom `index.html` file.
+1. Start an nginx web server, accessible on port 8080 on the host,
+   with its default `index.html` file.
+   * Direct your browser to `http://localhost:8080/` to verify that it works.
+1. Start an nginx web server, accessible on port 80 on the host, with
+   a custom `index.html` file.
+   * Direct your browser to `http://localhost/` to verify that it works.
 
 See your containers:
 ========================
@@ -284,7 +298,7 @@ Modify a container
 
 Exercise
 ----------
-1. Search online for the docker registry image 
+1. Search online for the docker registry image
 1. Start a private a docker image registry
     - Search for the image at <https://hub.docker.com/>
     - Start the image local
@@ -303,13 +317,13 @@ You have to cleanup your local images and old containers regulary.
 
 Especially on test and build systems this should be part of a cron job.
 
-    
+
     exited=$(docker ps -q -a -f status=exited | wc -l)
-    
+
     if [ "$exited" != "0" ]; then
             docker rm $(docker ps -q -a -f status=exited)
     fi
-    
+
     tagref=$(docker images -q -f dangling=true | wc -l)
 
     if [ "$tagref" != "0" ]; then0
@@ -330,7 +344,7 @@ The normal way to create images is through `Dockerfile` build descriptions.
 
         FROM nginx
         COPY index.html /usr/share/nginx/html/
-    
+
 2. build the image an give it a name
 
         docker build --pull -t my-nginx .
@@ -354,7 +368,7 @@ The `FROM` instruction sets the Base Image:
 
     FROM <image>:<tag>
 
-Example: 
+Example:
 
     FROM nginx:15:04
 
@@ -370,7 +384,7 @@ COPY
 - Source can contain wildcards
 - If dest does not exist it will be created
 
-Example: 
+Example:
 
     COPY service.config /etc/service/
     COPY service.config /etc/service/myconfig.cfg
@@ -405,7 +419,7 @@ The shell form:
 __Attention__: the shell form starts the command in a sub process, so it will not get
 the process id 1 and will not receive all signals e.g. from command line or `docker stop`.
 
-Example: 
+Example:
 
     CMD ["nginx", "-g", "daemon off;"]
 
@@ -424,7 +438,7 @@ The exec form (preferred):
 
     ENTRYPOINT ["executable", "param1", "param2"]
 
-Example: 
+Example:
 
     ENTRYPOINT ["top", "-b"]
     CMD ["-c"]
@@ -442,7 +456,7 @@ file system and produce a new layered container.
 
 It is common to tie related commands together into one RUN command, using shell magic.
 
-Example: 
+Example:
 
     RUN apt-get update && \
         apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
@@ -479,13 +493,13 @@ Create a `greeting` image which can echo a configurable hello world greeting mes
     docker run --rm greeting
     >  _   _       _ _         __  __                  _
     > | | | | __ _| | | ___   |  \/  | __ _ _ ____   _(_)_ __
-    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \ 
+    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \
     > |  _  | (_| | | | (_) | | |  | | (_| | |   \ V /| | | | |
     > |_| |_|\__,_|_|_|\___/  |_|  |_|\__,_|_|    \_/ |_|_| |_|
 
     docker run --rm -e message=Hi greeting Arthur
     >  _   _ _      _         _   _
-    > | | | (_)    / \   _ __| |_| |__  _   _ _ __ 
+    > | | | (_)    / \   _ __| |_| |__  _   _ _ __
     > | |_| | |   / _ \ | '__| __| '_ \| | | | '__|
     > |  _  | |  / ___ \| |  | |_| | | | |_| | |
     > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
@@ -501,14 +515,14 @@ ADD
 - If src is an URL, the file is downloaded
 - If src is a local tar archive, it will be extracted to dest
 
-Example: 
+Example:
 
     ADD https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.tar.gz /es/
     RUN cd /es && tar xvfz elasticsearch-1.4.4.tar.gz
 
     ADD configs.tar.gz /etc/service/
 
-Dockerfile 
+Dockerfile
 =====================
 
 VOLUME
@@ -525,7 +539,7 @@ Benefit:
 
         docker run --volumes-from container_with_volumes
 
-Dockerfile 
+Dockerfile
 =====================
 
 EXPOSE
@@ -651,7 +665,7 @@ docker-compose usage:
     Usage:
       docker-compose [options] [COMMAND] [ARGS...]
       docker-compose -h|--help
-    
+
     Commands:
       up                 Create and start containers
       down               Stop and remove containers, networks, images, and volumes
