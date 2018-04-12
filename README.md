@@ -298,8 +298,8 @@ Modify a container
 
 Exercise
 ----------
-1. Search online for the docker registry image
-1. Start a private a docker image registry
+1. Search online for the Docker registry image
+1. Start a private a Docker image registry
     - Search for the image at <https://hub.docker.com/>
     - Start the image local
 1. Commit your containers changes from the previous exercise
