@@ -34,22 +34,22 @@ Key concepts
 What is Docker not!
 --------------------
 * Not a virtualisation
-* No seperate kernel
+* No separate kernel
 * No hypervisor
 
 Installation
 ===============
-Docker is linux based, but there exist convienent solutions to work on Windows and Mac OS X also.
+Docker is linux based, but there exist convenient solutions to work on Windows and Mac OS X also.
 
 Detailed Instructions: <https://docs.docker.com/installation/>
 
 The simple way for installation in Ubuntu and Debian:
 
     curl https://get.docker.com/ | sh
-  
+
 docker-machine
 ===================
-Simple wrapper over virtualbox (or other backends) to create and manage a docker host.
+Simple wrapper over virtualbox (or other backends) to create and manage a Docker host.
 
     # create a new machine
     docker-machine create --driver=virtualbox dev
@@ -75,7 +75,7 @@ Part 2
 
 ## Command line interface
 
-The docker hello world
+The Docker hello world
 =========================
 
     docker run busybox echo 'Hello World'
@@ -85,7 +85,7 @@ What has happened?
 * Download the image `busybox`
 * Create a new container
 * Execute the `echo` command within the new container
-          
+
 Images and Containers
 ==========================
 
@@ -104,8 +104,8 @@ Docker Container
 * Should nor be used immutable modified
 * Maintains changes within the filesystems
 * Can be started, stopped, restarted, ..
-      
-      
+
+
 Commands for image handling
 ==============================
 
@@ -150,7 +150,7 @@ Start a new container
     docker run <imagename>
 
 My favorite run options:
-    
+
     Usage: docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
      --name             Give the container a symbolic name
      -v, --volume=[]    Bind mount a volume
@@ -223,7 +223,7 @@ save the container id in shell variables
     c=$(docker run -d nginx)
     docker rm -f $c
 
-start containers in foreground and with `--rm`, when playing arround:
+start containers in foreground and with `--rm`, when playing around:
 
     docker run --rm nginx
 
@@ -247,7 +247,7 @@ See the logs (stdout) of the container.
 
 copy
 -------
-copy files from and to docker container, e.g.
+copy files from and to Docker container, e.g.
 
     docker cp my_webserver:/etc/nginx/nginx.conf ~/
 
@@ -284,18 +284,18 @@ Modify a container
 
 Exercise
 ----------
-1. Search online for the docker registry image 
-1. Start a private a docker image registry
+1. Search online for the Docker registry image
+1. Start a private a Docker image registry
     - Search for the image at <https://hub.docker.com/>
     - Start the image local
 1. Commit your containers changes from the previous exercise
 1. Push your new image to your private registry
 1. Delete the image local
-1. Start the image again (now comming from the registry)
+1. Start the image again (now coming from the registry)
 
 Useful tricks: Cleanup Script
 =======================================
-You have to cleanup your local images and old containers regulary.
+You have to cleanup your local images and old containers regularly.
 
     docker rm $(docker ps -q -a -f status=exited)
     docker rmi $(docker images -q -f dangling=true)
@@ -303,13 +303,13 @@ You have to cleanup your local images and old containers regulary.
 
 Especially on test and build systems this should be part of a cron job.
 
-    
+
     exited=$(docker ps -q -a -f status=exited | wc -l)
-    
+
     if [ "$exited" != "0" ]; then
             docker rm $(docker ps -q -a -f status=exited)
     fi
-    
+
     tagref=$(docker images -q -f dangling=true | wc -l)
 
     if [ "$tagref" != "0" ]; then0
@@ -330,7 +330,7 @@ The normal way to create images is through `Dockerfile` build descriptions.
 
         FROM nginx
         COPY index.html /usr/share/nginx/html/
-    
+
 2. build the image an give it a name
 
         docker build --pull -t my-nginx .
@@ -354,7 +354,7 @@ The `FROM` instruction sets the Base Image:
 
     FROM <image>:<tag>
 
-Example: 
+Example:
 
     FROM nginx:15:04
 
@@ -370,7 +370,7 @@ COPY
 - Source can contain wildcards
 - If dest does not exist it will be created
 
-Example: 
+Example:
 
     COPY service.config /etc/service/
     COPY service.config /etc/service/myconfig.cfg
@@ -405,7 +405,7 @@ The shell form:
 __Attention__: the shell form starts the command in a sub process, so it will not get
 the process id 1 and will not receive all signals e.g. from command line or `docker stop`.
 
-Example: 
+Example:
 
     CMD ["nginx", "-g", "daemon off;"]
 
@@ -424,7 +424,7 @@ The exec form (preferred):
 
     ENTRYPOINT ["executable", "param1", "param2"]
 
-Example: 
+Example:
 
     ENTRYPOINT ["top", "-b"]
     CMD ["-c"]
@@ -435,14 +435,14 @@ Dockerfile
 RUN
 --------
 
-The `RUN` command allows to execute commands arbitary commands in the container, which modify the
+The `RUN` command allows to execute commands arbitrary commands in the container, which modify the
 file system and produce a new layered container.
 
     RUN <command>
 
 It is common to tie related commands together into one RUN command, using shell magic.
 
-Example: 
+Example:
 
     RUN apt-get update && \
         apt-get install -y ca-certificates nginx=${NGINX_VERSION} && \
@@ -474,18 +474,18 @@ Dockerfile
 
 Exercise
 ----------
-Create a `greeting` image which can echo a configurable hello world greeting message in ascii art (e.g. using the ubuntu package figlet):
+Create a `greeting` image which can echo a configurable hello world greeting message in ASCII art (e.g. using the ubuntu package figlet):
 
     docker run --rm greeting
     >  _   _       _ _         __  __                  _
     > | | | | __ _| | | ___   |  \/  | __ _ _ ____   _(_)_ __
-    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \ 
+    > | |_| |/ _` | | |/ _ \  | |\/| |/ _` | '__\ \ / / | '_ \
     > |  _  | (_| | | | (_) | | |  | | (_| | |   \ V /| | | | |
     > |_| |_|\__,_|_|_|\___/  |_|  |_|\__,_|_|    \_/ |_|_| |_|
 
     docker run --rm -e message=Hi greeting Arthur
     >  _   _ _      _         _   _
-    > | | | (_)    / \   _ __| |_| |__  _   _ _ __ 
+    > | | | (_)    / \   _ __| |_| |__  _   _ _ __
     > | |_| | |   / _ \ | '__| __| '_ \| | | | '__|
     > |  _  | |  / ___ \| |  | |_| | | | |_| | |
     > |_| |_|_| /_/   \_\_|   \__|_| |_|\__,_|_|
@@ -501,14 +501,14 @@ ADD
 - If src is an URL, the file is downloaded
 - If src is a local tar archive, it will be extracted to dest
 
-Example: 
+Example:
 
     ADD https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.4.tar.gz /es/
     RUN cd /es && tar xvfz elasticsearch-1.4.4.tar.gz
 
     ADD configs.tar.gz /etc/service/
 
-Dockerfile 
+Dockerfile
 =====================
 
 VOLUME
@@ -520,12 +520,12 @@ Declare folders for volume mounts.
 Benefit:
 -------
 - The user of your image has explicit documentation of the available mounts
-- The docker deamon and cloud tools can persist and backup them
+- The Docker daemon and cloud tools can persist and backup them
 - You can use the volumes from other containers by
 
         docker run --volumes-from container_with_volumes
 
-Dockerfile 
+Dockerfile
 =====================
 
 EXPOSE
@@ -576,7 +576,7 @@ Part 4
 Multiple containers
 ==========================
 
-The power of docker comes in, when you compose your apps out of multiple containers.
+The power of Docker comes in, when you compose your apps out of multiple containers.
 
 - Networking
 - docker-compose
@@ -584,7 +584,7 @@ The power of docker comes in, when you compose your apps out of multiple contain
 Networking Types
 =========================
 
-By default docker comes with the following networks:
+By default Docker comes with the following networks:
 
     docker network ls
 
@@ -651,7 +651,7 @@ docker-compose usage:
     Usage:
       docker-compose [options] [COMMAND] [ARGS...]
       docker-compose -h|--help
-    
+
     Commands:
       up                 Create and start containers
       down               Stop and remove containers, networks, images, and volumes
@@ -675,7 +675,7 @@ Exercise
 1. Setup a docker-compose project with:
    - webserver with php
    - database of choice (e.g. mysql, postgres, or nosql, ...)
-2. Implement a counter example im php
+2. Implement a counter example in php
 3. Scale the webserver
 
 compose best practices
@@ -694,7 +694,7 @@ Part 5
 
 Docker Swarm
 =======================
-Swarm is a build in docker clustering mode.
+Swarm is a build in Docker clustering mode.
 It provides:
 
 * Single master for communication with the cluster
@@ -710,7 +710,7 @@ Swarm setup with 3 virtualbox nodes
 Requirements:
 
 * Oracle Virtualbox has to be installed → https://www.virtualbox.org/wiki/Downloads
-* docker >= 1.12
+* Docker >= 1.12
 * docker-machine → https://docs.docker.com/machine/install-machine/
 
 
