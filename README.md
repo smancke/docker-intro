@@ -300,12 +300,12 @@ Modify a container
 Exercise
 ----------
 1. Search online for the Docker registry image
-1. Start a private a Docker image registry
+1. Start a private Docker image registry
     - Search for the image at <https://hub.docker.com/>
-    - Start the image local
-1. Commit your containers changes from the previous exercise
+    - Start the image locally
+1. Commit your container’s changes from the previous exercise
 1. Push your new image to your private registry
-1. Delete the image local
+1. Delete the image locally
 1. Start the image again (now coming from the registry)
 
 Useful tricks: Cleanup Script
@@ -346,7 +346,7 @@ The normal way to create images is through `Dockerfile` build descriptions.
         FROM nginx
         COPY index.html /usr/share/nginx/html/
 
-2. build the image an give it a name
+2. build the image and give it a name
 
         docker build --pull -t my-nginx .
 
@@ -356,7 +356,7 @@ Note:
 - The build has the current directory as context
 - All paths are relative to the Dockerfile
 - Each command in the Dockerfile creates a new (temporary container)
-- Every creation steps is cached, so repeated builds are fast
+- Every creation step is cached, so repeated builds are fast
 
 
 Dockerfile
@@ -407,7 +407,7 @@ CMD
 --------
 
 With `CMD` you can specify the default command to execute on container startup.
-It has who forms.
+It has two forms.
 
 The exec form (preferred):
 
@@ -433,7 +433,7 @@ ENTRYPOINT
 The command in `ENTRYPOINT` will be executed on startup and allows you to configure a container that will run as an executable.
 
 - The arguments in `CMD` are passed to the entrypoint by default
-- If supplied, the `docker run` arguments overwrite those of the `CMD` and are passed as entrypoints arguments.
+- If supplied, the `docker run` arguments overwrite those of the `CMD` and are passed as entrypoint arguments.
 
 The exec form (preferred):
 
@@ -450,7 +450,7 @@ Dockerfile
 RUN
 --------
 
-The `RUN` command allows to execute commands arbitrary commands in the container, which modify the
+The `RUN` command allows to execute arbitrary commands in the container, which modify the
 file system and produce a new layered container.
 
     RUN <command>
@@ -552,7 +552,7 @@ With `EXPOSE` an image can declare the ports which should be exported.
 Benefit:
 -------
 - This information is needed for communication between linked containers
-- The exposed ports can be uses by the `docker run -P`:
+- The exposed ports can be used by the `docker run -P`:
 
         -P, --publish-all=false  Publish all exposed ports to random ports
 
