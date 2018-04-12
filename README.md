@@ -163,9 +163,23 @@ My favorite run options:
      -i, --interactive=false   Keep STDIN open even if not attached
      -t, --tty=false    Allocate a pseudo-TTY
 
+Some option details
+====================
+
+* Publish port 80 from container as port 8080 on host: `-p 8080:80`
+* Mount local directory `/html` as directory `/usr/share/nginx/html`
+  in the container: `-v /html:/usr/share/nginx/html`
+  * “Mount” just means “make available”.
+  * `/usr/share/nginx/html` is where nginx expects HTML files.
+
 Exercise:
 ----------
-Start an nginx web server with a custom `index.html` file.
+1. Start an nginx web server, accessible on port 8080 on the host,
+   with its default `index.html` file.
+   * Direct your browser to `http://localhost:8080/` to verify that it works.
+1. Start an nginx web server, accessible on port 80 on the host, with
+   a custom `index.html` file.
+   * Direct your browser to `http://localhost/` to verify that it works.
 
 See your containers:
 ========================
