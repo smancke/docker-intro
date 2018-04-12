@@ -92,7 +92,7 @@ Images and Containers
 Docker Image
 ---------------
 
-* A template for containers
+* An immutable template for containers
 * Can be pulled and pushed towards a registry
 * Image names have the form `[registry/][user/]name[:tag]`
 * The default for the tag is `latest`
@@ -101,9 +101,10 @@ Docker Container
 ---------------
 
 * An instance of an image
-* Should nor be used immutable modified
+* Can be started, stopped, restarted, …
 * Maintains changes within the filesystems
-* Can be started, stopped, restarted, ..
+* New image can be created from current container state (not
+  recommended, use Dockerfile instead)
 
 
 Commands for image handling
